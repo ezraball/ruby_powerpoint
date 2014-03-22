@@ -1,3 +1,3 @@
 module RubyPowerpoint
-  VERSION = "1.0.2"
+  VERSION = "1.4.1"
 end

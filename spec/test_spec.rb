@@ -15,16 +15,23 @@ describe 'RubyPowerpoint parsing a sample PPTX file' do
     @deck.close
   end
 
-  it 'open a PPTX file successfully.' do
+  it 'parse a PPTX file successfully.' do
     @deck.should_not be_nil
     @deck.slides.should_not eql []
-    @deck.slides.first.content.should eql ["Some header here", "Some content here."]
-    @deck.slides.last.content.should eql ["WTF?", "What the hell s gong on?", "1234", "asdf", "34", "6"]
+    @deck.slides.first.content.should eql ["Some test ", "Powerpoint"]
+    @deck.slides.first.content.should eql  ["Some test ", "Powerpoint"]
+    image_byte_stream_1 = @deck.slides.first.images.first.read
+    File.open('temp_1.jpg', 'w'){|f| f.puts image_byte_stream_1}
+
+    @deck.slides.first.images.first.should_not eql nil #"ppt/media/image1.jpeg"
+    @deck.slides.last.title.should eql "Some title here" 
+    @deck.slides.last.content.should eql ["Some title here", "Some txt here", "Some ", "more text here."]
+    image_byte_stream_2 = @deck.slides.last.images.first.read
+    File.open('temp_2.jpg', 'w'){|f| f.puts image_byte_stream_2}
   end
 end
 
 describe 'open rime.pptx file' do
-  # I couldn't get the sample.pptx file to open on either Powerpoint 2007 on Windows 7 or in Powerpoint 2008 on Mac OS X 10.9, so I created my own file to test
   before(:all) do
     @deck = RubyPowerpoint::Presentation.new 'spec/fixtures/rime.pptx'
   end
@@ -66,6 +73,4 @@ describe 'open rime.pptx file' do
       @deck.slides[7].title.should eql "What if we have two"
     end
   end
-  
-  
 end
